@@ -5,23 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
 
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  
   <title>Frontend Mentor | Interactive comments section</title>
+  <link rel="stylesheet" href="style.css">
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
 </head>
 <body>
-
-    <section class="comments" id="comments-component">
-      
+  <main class="container">
+    <section class="comments" id="comments-section">
     </section>
-
-
-  
+    <form action="" class="write-comment">
+      <img src="./images/avatars/image-juliusomo.png" alt="" class="photo-user">
+      <textarea class="textarea-form" name="add-comment" id="add-comment" placeholder="Add a comment..."></textarea>
+      <button class="btn" type="submit">SEND</button>
+    </form>
+  </main>
   <script src="index.js"></script>
 </body>
 </html>
