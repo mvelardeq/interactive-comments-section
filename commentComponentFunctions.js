@@ -202,13 +202,14 @@ export function addCommentListeners(dataComments){
                     e.preventDefault()
                     const dataForm =new FormData(comment.nextElementSibling)
                     createReplyComment(comment,dataForm,dataComments)
+                    addEditRemoveListeners(dataComments)      
+
                 })
                 let end=comment.nextElementSibling.querySelector('.textarea-form').value.length
                 comment.nextElementSibling.querySelector('.textarea-form').setSelectionRange(end,end)
                 comment.nextElementSibling.querySelector('.textarea-form').focus()
             }
 
-        addEditRemoveListeners(dataComments)      
 
         })
     })
