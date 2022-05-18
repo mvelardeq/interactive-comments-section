@@ -84,7 +84,7 @@ function maxIdComments(comments,accum=[]){
     return Math.max(...accum)
 }
 
-// function that add a secondary comment so this is a rply of a comment (commentElement)
+// function that add a secondary comment, so this is a reply of a comment (commentElement)
 function createReplyComment(commentElement,dataForm,dataComments){
     if(dataForm.get('add-comment').trim()!==''){
         commentElement.nextElementSibling.remove()
@@ -202,13 +202,13 @@ export function addCommentListeners(dataComments){
                     e.preventDefault()
                     const dataForm =new FormData(comment.nextElementSibling)
                     createReplyComment(comment,dataForm,dataComments)
+                    addEditRemoveListeners(dataComments)      
                 })
                 let end=comment.nextElementSibling.querySelector('.textarea-form').value.length
                 comment.nextElementSibling.querySelector('.textarea-form').setSelectionRange(end,end)
                 comment.nextElementSibling.querySelector('.textarea-form').focus()
             }
 
-        addEditRemoveListeners(dataComments)      
 
         })
     })

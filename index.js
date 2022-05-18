@@ -7,7 +7,7 @@ const getComments = async ()=>{
     try {
 
         // Get data of Comments from file data.json by fetch
-        const dataFetch = await fetch('./data2.json')
+        const dataFetch = await fetch('./data.json')
         const dataComments = await dataFetch.json()
         const currentUser = dataComments.currentUser
         const comments = dataComments.comments
