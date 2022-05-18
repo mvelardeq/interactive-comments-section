@@ -185,11 +185,11 @@ a{
 }
 .textarea-form{
     flex: auto;
-    height: 70px;
+    min-height: 80px;
     border: 1px solid var(--fondo-claro);
     border-radius: 8px;
     resize: none;
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1rem;
     color: var(--paragraph-color);
     font-family: 'Rubik', sans-serif;
 }
@@ -215,4 +215,75 @@ a{
     color: #fff;
 }
 
+.edit-form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+}
 
+.edit-form textarea{
+    align-self: stretch;
+}
+
+@media (max-width:1200px){
+    .container{
+        padding: 30px 15px;
+    }
+    #comments-section{
+        gap: 15px;
+    }
+    .comment{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        position: relative;
+    }
+    .comment .score-comment{
+        flex-direction: row;
+        gap: 10px;
+        /* justify-content: baseline; */
+        order: 2;
+    }
+    .score-icon{
+        display: flex;
+        align-items: center;
+    }
+    .comment .main-comment{
+        order: 1;
+    }
+    .comment .reply-button{
+        position: absolute;
+        right: 25px;
+        bottom: 25px;
+    }
+    .maininfo-comment{
+        width: 100%;
+    }
+    .time{
+        margin-left: auto;
+    }
+    .vertical-line{
+        width: 0;
+    }
+    .replies-section{
+        gap: 15px;
+    }
+    .write-comment{
+        padding: 15px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "textarea textarea textarea"
+                             "img . button";
+    }
+    .write-comment img{
+        grid-area: img;
+    }
+    .write-comment textarea{
+        grid-area: textarea;
+    }
+    .write-comment button{
+        grid-area: button;
+    }
+}

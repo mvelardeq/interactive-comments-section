@@ -1,3 +1,4 @@
+// Create Comment Component with templates string
 function createCommentComponent(commentData,currentUser){
     let editDeleteBtns = `
         <a href="#" class=delete-comment>
@@ -50,6 +51,7 @@ function createCommentComponent(commentData,currentUser){
     return elementCreated
 }
 
+// Function that show the replies coment
 function insertReplyElementCommentElement(commentElement,replyElement){
     if(commentElement.querySelector('.list-replies')){
         commentElement.querySelector('.list-replies').appendChild(replyElement)
@@ -71,6 +73,7 @@ function insertReplyElementCommentElement(commentElement,replyElement){
     }
 }
 
+// Function that get the max id in order to add new component with max id plus one
 function maxIdComments(comments,accum=[]){
     comments.map(el=>{
         if(el.replies && el.replies.length>0){
@@ -81,6 +84,7 @@ function maxIdComments(comments,accum=[]){
     return Math.max(...accum)
 }
 
+// function that add a secondary comment so this is a rply of a comment (commentElement)
 function createReplyComment(commentElement,dataForm,dataComments){
     if(dataForm.get('add-comment').trim()!==''){
         commentElement.nextElementSibling.remove()
@@ -114,10 +118,11 @@ function createReplyComment(commentElement,dataForm,dataComments){
         }
     }
 }
+
+// function that add a principal comment in the first level of comments
 export function createfirstLevelComment(dataForm,dataComments){
     if(dataForm.get('add-comment').trim()!==''){
         const form = document.querySelector('.commentForm')
-        console.log(form)
         const el = {
             "id":maxIdComments(dataComments.comments)+1,
             "content": dataForm.get('add-comment'),
@@ -136,10 +141,12 @@ export function createfirstLevelComment(dataForm,dataComments){
     }
 }
 
+// Function that get the comment has replies or not
 function hasReplies(comment){
     return (comment.replies && comment.replies.length>0) ? true :false
 }
 
+// Show the form of a comment reply and add to a fragment
 export function addFormCommentInFragment(fragment,currentUser){
     const replyHtml = `
     <form action="" method="POST" class="write-comment" id="firstLevelForm">
@@ -154,6 +161,7 @@ export function addFormCommentInFragment(fragment,currentUser){
     fragment.appendChild(commentFormElement)
 }
 
+// This function show in a DOM all comments and add to a fragment, this function works in all levels comments
 export function setCommentsInFragment(commentsData,currentUser,fragment,parentElement=false){
     commentsData.forEach(commentData=>{
         let commentElement=createCommentComponent(commentData,currentUser)
@@ -171,28 +179,101 @@ export function setCommentsInFragment(commentsData,currentUser,fragment,parentEl
     })
 }
 
-export function replyListenerFunction(dataComments){
+// This function show the form of a reply of a comment, separate it by two way, the first is for a comment secondary level and second the principal level comment
+export function addCommentListeners(dataComments){
     const btnsReply = document.querySelectorAll(".reply-btn")
-    const replyHtml = `
-    <form action="" method="POST" class="write-comment reply-comment">
-        <img src="${dataComments.currentUser.image.png}" alt="" class="photo-user">
-        <textarea class="textarea-form" name="add-comment" id="add-comment" placeholder="Add a comment..."></textarea>
-        <button class="btn" type="submit">REPLY</button>
-    </form>
-    `
+    
     btnsReply.forEach(el=>{
         el.addEventListener('click',e=>{
             e.preventDefault()
             if(!document.querySelector('.reply-comment')){
                 const comment = e.target.closest('.comment')
+
+                const replyHtml = `
+                <form action="" method="POST" class="write-comment reply-comment">
+                    <img src="${dataComments.currentUser.image.png}" alt="" class="photo-user">
+                    <textarea class="textarea-form" name="add-comment" id="add-comment" placeholder="Add a comment..." value="">@${comment.querySelector('.username-comment').textContent}, </textarea>
+                    <button class="btn" type="submit">REPLY</button>
+                </form>
+                `
+
                 comment.insertAdjacentHTML('afterend',replyHtml)
                 comment.nextElementSibling.addEventListener('submit',e=>{
                     e.preventDefault()
                     const dataForm =new FormData(comment.nextElementSibling)
                     createReplyComment(comment,dataForm,dataComments)
                 })
-                
+                let end=comment.nextElementSibling.querySelector('.textarea-form').value.length
+                comment.nextElementSibling.querySelector('.textarea-form').setSelectionRange(end,end)
+                comment.nextElementSibling.querySelector('.textarea-form').focus()
             }
+
+        addEditRemoveListeners(dataComments)      
+
+        })
+    })
+
+    document.getElementById('firstLevelForm').addEventListener('submit',e=>{
+        e.preventDefault()
+        const dataForm =new FormData(e.target)
+        createfirstLevelComment(dataForm,dataComments)
+        e.target.reset()
+        document.getElementById('firstLevelForm').querySelector('.textarea-form').focus()
+
+        addEditRemoveListeners(dataComments)      
+    })
+
+
+}
+
+// This function set the all addEvenListener of Edit and remove of the comment writen by the current user
+export function addEditRemoveListeners(dataComments){
+    const editsBtn = document.querySelectorAll('.edit-comment')
+    const removesBtn = document.querySelectorAll('.delete-comment')
+
+    editsBtn.forEach(el=>{
+        el.addEventListener('click',e=>{
+            e.preventDefault()
+                if(!document.querySelector('.edit-form')){
+                const commentComponent = e.target.closest('.comment-component')
+                const comment = e.target.closest('.comment')
+                const editFormHtml = `
+                <form action="" method="POST" class="edit-form">
+                    <textarea class="textarea-form" name="add-comment" id="add-comment" placeholder="Add a comment...">${comment.querySelector('.body-comment').textContent.trim()}</textarea>
+                    <button class="btn" type="submit">UPDATE</button>
+                </form>
+                `
+                const divForm = document.createElement('div')
+                divForm.classList.add('div-form')
+                divForm.innerHTML=editFormHtml
+                comment.querySelector('.main-comment').replaceChild(divForm,comment.querySelector('.body-comment'))
+                const end=comment.querySelector('.textarea-form').value.length
+                comment.querySelector('.textarea-form').setSelectionRange(end,end)
+                comment.querySelector('.textarea-form').focus()
+                
+                comment.querySelector('form').addEventListener('submit',e=>{
+                    e.preventDefault()
+                    const formData = new FormData(e.target)
+                    const editCommentHTML = formData.get('add-comment')
+                    const editComment = document.createElement('div')
+                    editComment.classList.add('body-comment')
+                    editComment.innerHTML=editCommentHTML
+                    comment.querySelector('.main-comment').replaceChild(editComment,comment.querySelector('.div-form'))
+
+                    addEditRemoveListeners(dataComments)
+
+                })
+
+            }
+        })
+    })
+
+
+    removesBtn.forEach(el=>{
+        el.addEventListener('click',e=>{
+            e.preventDefault()
+            const commentComponent = e.target.closest('.comment-component')
+            commentComponent.remove()
         })
     })
 }
